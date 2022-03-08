@@ -1,0 +1,25 @@
+{
+  "name": "create-electron-vite",
+  "version": "0.0.0",
+  "description": "Scaffolding Your Electron + Vite Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caoxiemeihao/create-electron-vite.git"
+  },
+  "keywords": [
+    "electron",
+    "vite",
+    "scaffold",
+    "starter"
+  ],
+  "author": "草鞋没号 <308487730@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/caoxiemeihao/create-electron-vite/issues"
+  },
+  "homepage": "https://github.com/caoxiemeihao/create-electron-vite#readme"
+}
