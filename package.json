@@ -1,6 +1,6 @@
 {
   "name": "create-electron-vite",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Scaffolding Your Electron + Vite Project",
   "bin": "index.js",
   "main": "index.js",
