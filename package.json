@@ -25,5 +25,8 @@
   "homepage": "https://github.com/caoxiemeihao/create-electron-vite#readme",
   "dependencies": {
     "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.25"
   }
 }
