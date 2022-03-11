@@ -1,11 +1,14 @@
 {
   "name": "create-electron-vite",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Scaffolding Your Electron + Vite Project",
-  "bin": "index.js",
+  "bin": {
+    "create-electron-vite": "bin.js"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild index.js --bundle --platform=node --outfile=bin.js"
   },
   "repository": {
     "type": "git",
