@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/caoxiemeihao/create-electron-vite#readme",
   "dependencies": {
-    "minimist": "^1.2.5",
     "prompts": "^2.4.2"
   }
 }
