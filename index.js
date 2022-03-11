@@ -14,9 +14,18 @@ async function init() {
       name: 'value',
       message: 'Project name:',
       choices: [
-        { title: 'Vue', value: 'electron-vite-vue=electron-vue-vite' },
-        { title: 'React', value: 'electron-vite-react=vite-react-electron' },
-        { title: 'Vanilla', value: 'electron-vite-vanilla=electron-vite-boilerplate' },
+        {
+          title: 'Vue',
+          value: { projectName: 'electron-vite-vue', repoName: 'electron-vue-vite' },
+        },
+        {
+          title: 'React',
+          value: { projectName: 'electron-vite-react', repoName: 'vite-react-electron' },
+        },
+        {
+          title: 'Vanilla',
+          value: { projectName: 'electron-vite-vanilla', repoName: 'electron-vite-boilerplate' },
+        },
       ],
     }
   ]);
@@ -33,7 +42,7 @@ async function init() {
     },
   ]);
 
-  const [projectName, repoName] = template.value.split('=');
+  const { projectName, repoName } = template.value;
   const repo = `https://github.com/caoxiemeihao/${repoName}`;
 
   try {
