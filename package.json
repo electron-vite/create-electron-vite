@@ -3,12 +3,12 @@
   "version": "0.0.3",
   "description": "Scaffolding Your Electron + Vite Project",
   "bin": {
-    "create-electron-vite": "bin.js"
+    "create-electron-vite": "index.js",
+    "cev": "index.js"
   },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild index.js --bundle --platform=node --outfile=bin.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,5 @@
   "homepage": "https://github.com/caoxiemeihao/create-electron-vite#readme",
   "dependencies": {
     "prompts": "^2.4.2"
-  },
-  "devDependencies": {
-    "esbuild": "^0.14.25"
   }
 }
