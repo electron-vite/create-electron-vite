@@ -1,8 +1,27 @@
 # create-electron-vite
 Scaffolding Your Electron + Vite Project
 
-## Usage
 
+With NPM:
+
+```sh
+npm create electron-vite@latest
 ```
-npx create-electron-vite
+
+With Yarn:
+
+```sh
+yarn create electron-vite
 ```
+
+With PNPM:
+
+```sh
+pnpm create electron-vite
+```
+
+## template 👉 repository
+
+Vue 👉 [electron-vite-vue](https://github.com/caoxiemeihao/electron-vue-vite)
+React 👉 [electron-vite-react](https://github.com/caoxiemeihao/vite-react-electron)
+Vanilla 👉 [electron-vite-vanilla](https://github.com/caoxiemeihao/electron-vite-boilerplate/tree/vanilla)
