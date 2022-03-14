@@ -12,7 +12,7 @@ async function init() {
     {
       type: 'select',
       name: 'value',
-      message: 'Project name:',
+      message: 'Project template:',
       choices: [
         {
           title: 'Vue',
@@ -24,25 +24,19 @@ async function init() {
         },
         {
           title: 'Vanilla',
-          value: { projectName: 'electron-vite-vanilla', repoName: 'electron-vite-boilerplate' },
+          value: {
+            projectName: 'electron-vite-vanilla',
+            repoName: 'electron-vite-boilerplate',
+            branch: 'vanilla',
+          },
         },
       ],
     }
   ]);
 
-  const nodeIntegration = await prompts([
-    {
-      type: 'select',
-      name: 'value',
-      message: 'Enable "nodeIntegration" in Renderer process:',
-      choices: [
-        { title: 'Yes', value: true },
-        { title: 'No', value: false },
-      ],
-    },
-  ]);
+  if (!template.value) return;
 
-  const { projectName, repoName } = template.value;
+  const { projectName, repoName, branch } = template.value;
   const repo = `https://github.com/caoxiemeihao/${repoName}`;
 
   try {
@@ -51,7 +45,7 @@ async function init() {
       process.exit(1);
     }
 
-    await gitClone(repo, projectName, !nodeIntegration.value ? 'nodeIntegration=false' : '');
+    await gitClone(repo, projectName, branch);
 
     fs.rmSync(path.join(cwd, projectName, '.git'), { recursive: true, force: true });
   } catch (error) {
@@ -59,7 +53,7 @@ async function init() {
   }
 }
 
-function gitClone(repo, projectName, branch = '') {
+function gitClone(repo, projectName, branch) {
   return new Promise((resolve, reject) => {
     const _branch = branch ? ['-b', branch] : [];
     cp.spawn(
@@ -77,6 +71,4 @@ function gitClone(repo, projectName, branch = '') {
   });
 }
 
-init().catch((e) => {
-  console.error(e)
-});
+init();
