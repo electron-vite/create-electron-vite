@@ -16,19 +16,15 @@ async function init() {
       choices: [
         {
           title: 'Vue',
-          value: { projectName: 'electron-vite-vue', repoName: 'electron-vue-vite' },
+          value: { projectName: 'electron-vite-vue', repoName: 'electron-vite-vue' },
         },
         {
           title: 'React',
-          value: { projectName: 'electron-vite-react', repoName: 'vite-react-electron' },
+          value: { projectName: 'electron-vite-react', repoName: 'electron-vite-react' },
         },
         {
           title: 'Vanilla',
-          value: {
-            projectName: 'electron-vite-vanilla',
-            repoName: 'electron-vite-boilerplate',
-            branch: 'vanilla',
-          },
+          value: { projectName: 'electron-vite-vanilla', repoName: 'electron-vite-boilerplate' },
         },
       ],
     }
