@@ -22,6 +22,6 @@ pnpm create electron-vite
 
 ## template 👉 repository
 
-Vue 👉 [electron-vite-vue](https://github.com/caoxiemeihao/electron-vite-vue)
-React 👉 [electron-vite-react](https://github.com/caoxiemeihao/electron-vite-react)
-Vanilla 👉 [electron-vite-vanilla](https://github.com/caoxiemeihao/electron-vite-boilerplate)
+Vue 👉 [electron-vite-vue](https://github.com/electron-vite/electron-vite-vue)  
+React 👉 [electron-vite-react](https://github.com/electron-vite/electron-vite-react)  
+Vanilla 👉 [electron-vite-vanilla](https://github.com/electron-vite/electron-vite-boilerplate)  
