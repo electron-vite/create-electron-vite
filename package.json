@@ -28,5 +28,8 @@
   "homepage": "https://github.com/caoxiemeihao/create-electron-vite#readme",
   "dependencies": {
     "prompts": "^2.4.2"
-  }
+  },
+  "files": [
+    "index.js"
+  ]
 }
