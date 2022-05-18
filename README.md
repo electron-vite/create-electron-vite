@@ -1,6 +1,8 @@
 # create-electron-vite
+
 Scaffolding Your Electron + Vite Project
 
+![electron-vite-vue.gif](https://github.com/electron-vite/electron-vite-vue/blob/main/packages/renderer/public/electron-vite-vue.gif?raw=true)
 
 With NPM:
 
