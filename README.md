@@ -2,7 +2,7 @@
 
 Scaffolding Your Electron + Vite Project
 
-![electron-vite-vue.gif](https://github.com/caoxiemeihao/blog/blob/main/vite/vite-plugin-electron.gif?raw=true)
+![electron-vite-vue.gif](https://github.com/electron-vite/electron-vite-vue/raw/main/public/electron-vite-vue.gif?raw=true)
 
 With NPM:
 
