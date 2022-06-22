@@ -24,7 +24,7 @@ async function init() {
         },
         {
           title: 'Vanilla',
-          value: { projectName: 'electron-vite-vanilla', repoName: 'electron-vite-boilerplate' },
+          value: { projectName: 'electron-vite-vanilla', repoName: 'vite-plugin-electron-quick-start' },
         },
       ],
     }
@@ -33,7 +33,7 @@ async function init() {
   if (!template.value) return;
 
   const { projectName, repoName, branch } = template.value;
-  const repo = `https://github.com/caoxiemeihao/${repoName}`;
+  const repo = `https://github.com/electron-vite/${repoName}`;
 
   try {
     if (fs.existsSync(projectName) && fs.statSync(projectName).isDirectory()) {
