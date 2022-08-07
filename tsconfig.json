@@ -1,0 +1,9 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.node.json",
+  "include": [
+    "index.ts"
+  ],
+  "compilerOptions": {
+    "strict": false
+  }
+}
