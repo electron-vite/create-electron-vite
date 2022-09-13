@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { spawn } from 'node:child_process'
@@ -16,24 +14,25 @@ async function init() {
       choices: [
         {
           title: 'Vue',
-          value: { projectName: 'electron-vite-vue', repoName: 'electron-vite-vue' }
+          value: { projectName: 'electron-vite-vue', repoName: 'electron-vite-vue' },
         },
         {
           title: 'React',
-          value: { projectName: 'electron-vite-react', repoName: 'electron-vite-react' }
+          value: { projectName: 'electron-vite-react', repoName: 'electron-vite-react' },
         },
         {
           title: 'Vanilla',
           value: {
             projectName: 'electron-vite-vanilla',
-            repoName: 'vite-plugin-electron-quick-start'
-          }
-        }
-      ]
-    }
+            repoName: 'vite-plugin-electron-quick-start',
+          },
+        },
+      ],
+    },
   ])
 
-  if (!template.value) return
+  if (!template.value)
+    return
 
   const { projectName, repoName, branch } = template.value
   const repo = `https://github.com/electron-vite/${repoName}`
@@ -47,9 +46,12 @@ async function init() {
     await gitClone(repo, projectName, branch)
 
     fs.rmSync(path.join(cwd, projectName, '.git'), { recursive: true, force: true })
-  } catch (err) {
-    console.error(err?.message)
-    process.exit(1)
+  }
+  catch (err) {
+    if (err instanceof Error) {
+      console.error(err?.message)
+      process.exit(1)
+    }
   }
 }
 
@@ -64,7 +66,7 @@ function gitClone(repo: string, projectName: string, branch: string) {
           return
         }
         resolve(signal)
-      }
+      },
     )
   })
 }

@@ -1,9 +1,16 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.node.json",
   "include": [
-    "index.ts"
+    "src"
   ],
   "compilerOptions": {
-    "strict": false
+    "outDir": "dist",
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "Node",
+    "strict": true,
+    "declaration": false,
+    "sourceMap": false,
+    "noUnusedLocals": true,
+    "esModuleInterop": true
   }
 }
