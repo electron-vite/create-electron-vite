@@ -1,27 +1,19 @@
 {
   "name": "create-electron-vite",
-  "version": "0.1.1",
-  "description": "Scaffolding Your Electron + Vite Project",
-  "private": true,
-  "packageManager": "pnpm@7.5.1",
-  "bin": {
-    "create-electron-vite": "index.cjs",
-    "cev": "index.cjs"
-  },
   "type": "module",
-  "engines": {
-    "node": "^14.18.0 || >=16.0.0"
-  },
-  "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "prepare": "husky install",
-    "format": "prettier --write .",
-    "build": "zx ./scripts/build.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "0.1.1",
+  "private": true,
+  "packageManager": "pnpm@7.11.0",
+  "description": "Scaffolding Your Electron + Vite Project",
+  "author": "草鞋没号 <308487730@qq.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/caoxiemeihao/create-electron-vite#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/caoxiemeihao/create-electron-vite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/caoxiemeihao/create-electron-vite/issues"
   },
   "keywords": [
     "electron",
@@ -29,31 +21,41 @@
     "scaffold",
     "starter"
   ],
-  "author": "草鞋没号 <308487730@qq.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/caoxiemeihao/create-electron-vite/issues"
+  "main": "index.js",
+  "bin": {
+    "create-electron-vite": "index.js",
+    "cev": "index.js"
   },
-  "homepage": "https://github.com/caoxiemeihao/create-electron-vite#readme",
   "files": [
-    "index.cjs"
+    "index.js",
+    "dist"
   ],
+  "engines": {
+    "node": "^14.18.0 || >=16.0.0"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky install",
+    "lint": "eslint .",
+    "build": "unbuild"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2"
+  },
   "devDependencies": {
-    "@types/eslint": "^8.4.5",
-    "@types/node": "^18.6.4",
+    "@antfu/eslint-config": "^0.26.3",
+    "@types/node": "^18.7.16",
     "@types/prompts": "^2.0.14",
-    "@vue/tsconfig": "^0.1.3",
-    "esbuild": "^0.14.53",
+    "eslint": "^8.23.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "pnpm": "^7.5.1",
-    "prettier": "^2.7.1",
-    "prompts": "^2.4.2",
-    "zx": "^7.0.8"
+    "pnpm": "^7.11.0",
+    "typescript": "^4.8.3",
+    "unbuild": "^0.8.10"
   },
   "lint-staged": {
     "*.{js,ts,json}": [
-      "prettier --write"
+      "pnpm exec eslint . --fix"
     ]
   }
 }
