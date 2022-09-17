@@ -35,7 +35,6 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "prepare": "husky install",
     "lint": "eslint .",
     "build": "unbuild"
   },
@@ -44,18 +43,21 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.26.3",
-    "@types/node": "^18.7.16",
+    "@types/node": "^18.7.18",
     "@types/prompts": "^2.0.14",
-    "eslint": "^8.23.0",
-    "husky": "^8.0.1",
+    "eslint": "^8.23.1",
     "lint-staged": "^13.0.3",
     "pnpm": "^7.11.0",
+    "simple-git-hooks": "^2.8.0",
     "typescript": "^4.8.3",
-    "unbuild": "^0.8.10"
+    "unbuild": "^0.8.11"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
-    "*.{js,ts,json}": [
-      "pnpm exec eslint . --fix"
+    "*.{js,ts,tsx,md}": [
+      "eslint --fix"
     ]
   }
 }

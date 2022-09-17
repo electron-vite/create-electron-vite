@@ -2,27 +2,27 @@ lockfileVersion: 5.4
 
 specifiers:
   '@antfu/eslint-config': ^0.26.3
-  '@types/node': ^18.7.16
+  '@types/node': ^18.7.18
   '@types/prompts': ^2.0.14
-  eslint: ^8.23.0
-  husky: ^8.0.1
+  eslint: ^8.23.1
   lint-staged: ^13.0.3
   pnpm: ^7.11.0
   prompts: ^2.4.2
+  simple-git-hooks: ^2.8.0
   typescript: ^4.8.3
-  unbuild: ^0.8.10
+  unbuild: ^0.8.11
 
 dependencies:
   prompts: 2.4.2
 
 devDependencies:
   '@antfu/eslint-config': 0.26.3_irgkl5vooow2ydyo6aokmferha
-  '@types/node': 18.7.17
+  '@types/node': 18.7.18
   '@types/prompts': 2.0.14
   eslint: 8.23.1
-  husky: 8.0.1
   lint-staged: 13.0.3
   pnpm: 7.11.0
+  simple-git-hooks: 2.8.0
   typescript: 4.8.3
   unbuild: 0.8.11
 
@@ -555,8 +555,8 @@ packages:
       '@types/unist': 2.0.6
     dev: true
 
-  /@types/node/18.7.17:
-    resolution: {integrity: sha512-0UyfUnt02zIuqp7yC8RYtDkp/vo8bFaQ13KkSEvUAohPOAlnVNbj5Fi3fgPSuwzakS+EvvnnZ4x9y7i6ASaSPQ==}
+  /@types/node/18.7.18:
+    resolution: {integrity: sha512-m+6nTEOadJZuTPkKR/SYK3A2d7FZrgElol9UP1Kae90VVU4a6mxnPuLiIW1m4Cq4gZ/nWb9GrdVXJCoCazDAbg==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -566,13 +566,13 @@ packages:
   /@types/prompts/2.0.14:
     resolution: {integrity: sha512-HZBd99fKxRWpYCErtm2/yxUZv6/PBI9J7N4TNFffl5JbrYMHBwF25DjQGTW3b3jmXq+9P6/8fCIb2ee57BFfYA==}
     dependencies:
-      '@types/node': 18.7.17
+      '@types/node': 18.7.18
     dev: true
 
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 18.7.17
+      '@types/node': 18.7.18
     dev: true
 
   /@types/unist/2.0.6:
@@ -2287,12 +2287,6 @@ packages:
     engines: {node: '>=12.20.0'}
     dev: true
 
-  /husky/8.0.1:
-    resolution: {integrity: sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dev: true
-
   /ignore/5.2.0:
     resolution: {integrity: sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==}
     engines: {node: '>= 4'}
@@ -3315,6 +3309,12 @@ packages:
 
   /signal-exit/3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
+    dev: true
+
+  /simple-git-hooks/2.8.0:
+    resolution: {integrity: sha512-ocmZQORwa6x9mxg+gVIAp5o4wXiWOHGXyrDBA0+UxGKIEKOyFtL4LWNKkP/2ornQPdlnlDGDteVeYP5FjhIoWA==}
+    hasBin: true
+    requiresBuild: true
     dev: true
 
   /sisteransi/1.0.5:
