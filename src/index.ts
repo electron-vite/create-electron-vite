@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process'
 import prompts from 'prompts'
 
 const cwd = process.cwd()
+const projectNameArg = process.argv[2]
 
 async function init() {
   const template = await prompts([
@@ -29,12 +30,20 @@ async function init() {
         },
       ],
     },
+    {
+      type: () => projectNameArg ? null : 'text',
+      name: 'name',
+      message: 'Project name:',
+      initial: prev => prev.projectName,
+      validate: v => !/[^a-zA-Z0-9._-]/g.test(v),
+    },
   ])
 
   if (!template.value)
     return
 
-  const { projectName, repoName, branch } = template.value
+  const { repoName, branch } = template.value
+  const projectName = projectNameArg || template.name
   const repo = `https://github.com/electron-vite/${repoName}`
 
   try {
@@ -64,6 +73,16 @@ function gitClone(repo: string, projectName: string, branch: string) {
         if (code) {
           reject(code)
           return
+        }
+        // 更改package.json的name
+        try {
+          const packageJSON = fs.readFileSync(path.join(cwd, projectName, 'package.json')).toString()
+          const packageInfo = JSON.parse(packageJSON)
+          packageInfo.name = projectName
+          fs.writeFileSync(path.join(cwd, projectName, 'package.json'), JSON.stringify(packageInfo, null, 2))
+        }
+        catch (e) {
+          console.error(e)
         }
         resolve(signal)
       },
