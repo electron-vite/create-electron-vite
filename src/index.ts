@@ -1,93 +1,143 @@
-import * as fs from 'node:fs'
-import * as path from 'node:path'
-import { spawn } from 'node:child_process'
-import prompts from 'prompts'
+import { spawn } from "node:child_process";
+import * as path from "node:path";
+import { red } from "kolorist";
+import * as fs from "node:fs";
+import prompts from "prompts";
 
-const cwd = process.cwd()
-const projectNameArg = process.argv[2]
+const cwd = process.cwd();
+const argTargetDir = process.argv.slice(2).join(" ");
+
+const defaultTargetDir = "electron-vite-project";
 
 async function init() {
-  const template = await prompts([
-    {
-      type: 'select',
-      name: 'value',
-      message: 'Project template:',
-      choices: [
-        {
-          title: 'Vue',
-          value: { projectName: 'electron-vite-vue', repoName: 'electron-vite-vue' },
-        },
-        {
-          title: 'React',
-          value: { projectName: 'electron-vite-react', repoName: 'electron-vite-react' },
-        },
-        {
-          title: 'Vanilla',
-          value: {
-            projectName: 'electron-vite-vanilla',
-            repoName: 'vite-plugin-electron-quick-start',
-          },
-        },
-      ],
-    },
-    {
-      type: () => projectNameArg ? null : 'text',
-      name: 'name',
-      message: 'Project name:',
-      initial: prev => prev.projectName,
-      validate: v => !/[^a-zA-Z0-9._-]/g.test(v),
-    },
-  ])
+    let template: prompts.Answers<"projectName" | "packageName" | "repoName">;
 
-  if (!template.value)
-    return
+    let targetDir = argTargetDir ?? defaultTargetDir;
 
-  const { repoName, branch } = template.value
-  const projectName = projectNameArg || template.name
-  const repo = `https://github.com/electron-vite/${repoName}`
+    const getProjectName = () => (targetDir === "." ? path.basename(path.resolve()) : targetDir);
 
-  try {
-    if (fs.existsSync(projectName) && fs.statSync(projectName).isDirectory()) {
-      console.error(`🚧 Directory "${projectName}" already exists.`)
-      process.exit(1)
+    try {
+        template = await prompts(
+            [
+                {
+                    type: () => (argTargetDir ? null : "text"),
+                    name: "projectName",
+                    message: "Project name:",
+                    initial: defaultTargetDir,
+                    onState: (state) => {
+                        targetDir = state?.value.trim().replace(/\/+$/g, "") ?? defaultTargetDir;
+                    }
+                },
+                {
+                    type: () => (isValidPackageName(getProjectName()) ? null : "text"),
+                    name: "packageName",
+                    message: "Package name:",
+                    initial: () => toValidPackageName(getProjectName()),
+                    validate: (dir) => isValidPackageName(dir) || "Invalid package.json name"
+                },
+                {
+                    type: "select",
+                    name: "repoName",
+                    message: "Project template:",
+                    choices: [
+                        {
+                            title: "Vue",
+                            value: "electron-vite-vue"
+                        },
+                        {
+                            title: "React",
+                            value: "electron-vite-react"
+                        },
+                        {
+                            title: "Vanilla",
+                            value: "vite-plugin-electron-quick-start"
+                        }
+                    ]
+                }
+            ],
+            {
+                onCancel: () => {
+                    throw new Error(`${red("✖")} Operation cancelled`);
+                }
+            }
+        );
+    } catch (cancelled: any) {
+        console.log(cancelled.message);
+        return;
     }
 
-    await gitClone(repo, projectName, branch)
+    const { repoName, packageName }: { repoName: string; packageName: string } = template;
 
-    fs.rmSync(path.join(cwd, projectName, '.git'), { recursive: true, force: true })
-  }
-  catch (err) {
-    if (err instanceof Error) {
-      console.error(err?.message)
-      process.exit(1)
+    const repo = `https://github.com/electron-vite/${repoName}`;
+
+    try {
+        if (fs.existsSync(targetDir) && fs.statSync(targetDir).isDirectory()) {
+            console.error(`🚧 Directory "${targetDir}" already exists.`);
+            process.exit(1);
+        }
+
+        await gitClone({ repo, targetDir, packageName });
+
+        fs.rmSync(path.join(cwd, targetDir, ".git"), {
+            recursive: true,
+            force: true
+        });
+    } catch (err) {
+        if (err instanceof Error) {
+            console.error(err.message);
+            process.exit(1);
+        }
     }
-  }
 }
 
-function gitClone(repo: string, projectName: string, branch: string) {
-  return new Promise((resolve, reject) => {
-    const _branch = branch ? ['-b', branch] : []
-    spawn('git', ['clone', ..._branch, repo, projectName, '--depth', '1'], { stdio: 'inherit' }).on(
-      'close',
-      (code, signal) => {
-        if (code) {
-          reject(code)
-          return
-        }
-        // 更改package.json的name
-        try {
-          const packageJSON = fs.readFileSync(path.join(cwd, projectName, 'package.json')).toString()
-          const packageInfo = JSON.parse(packageJSON)
-          packageInfo.name = projectName
-          fs.writeFileSync(path.join(cwd, projectName, 'package.json'), JSON.stringify(packageInfo, null, 2))
-        }
-        catch (e) {
-          console.error(e)
-        }
-        resolve(signal)
-      },
-    )
-  })
+function gitClone({
+    repo,
+    targetDir,
+    packageName,
+    branch
+}: {
+    repo: string;
+    targetDir: string;
+    packageName?: string;
+    branch?: string;
+}) {
+    return new Promise((resolve, reject) => {
+        const _branch = branch ? ["-b", branch] : [];
+        packageName = packageName ?? targetDir;
+        spawn("git", ["clone", ..._branch, repo, targetDir, "--depth", "1"], {
+            stdio: "inherit"
+        }).on("close", (code, signal) => {
+            if (code) {
+                reject(code);
+                return;
+            }
+            // 更改package.json的name
+            try {
+                const packageJSON = fs.readFileSync(path.join(cwd, targetDir, "package.json")).toString();
+                const packageInfo = JSON.parse(packageJSON);
+                packageInfo.name = packageName;
+                fs.writeFileSync(path.join(cwd, targetDir, "package.json"), JSON.stringify(packageInfo, null, 2));
+            } catch (e) {
+                console.error(e);
+            }
+            resolve(signal);
+        });
+    });
 }
 
-init()
+function isValidPackageName(projectName: string) {
+    return /^(?:@[a-z\d\-*~][a-z\d\-*._~]*\/)?[a-z\d\-~][a-z\d\-._~]*$/.test(projectName);
+}
+
+function toValidPackageName(projectName: string) {
+    return projectName
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/^[._]/, "")
+        .replace(/[^a-z\d\-~]+/g, "-");
+}
+
+init().catch((e) => {
+    console.error(e);
+});

@@ -7,23 +7,23 @@ Scaffolding Your Electron + Vite Project
 With NPM:
 
 ```sh
-npm create electron-vite@latest
+$ npm create electron-vite@latest
 ```
 
 With Yarn:
 
 ```sh
-yarn create electron-vite
+$ yarn create electron-vite
 ```
 
 With PNPM:
 
 ```sh
-pnpm create electron-vite
+$ pnpm create electron-vite
 ```
 
-## template 👉 repository
+## Template repository
 
-- Vue 👉 [electron-vite-vue](https://github.com/electron-vite/electron-vite-vue)
-- React 👉 [electron-vite-react](https://github.com/electron-vite/electron-vite-react)
-- Vanilla 👉 [electron-vite-vanilla](https://github.com/electron-vite/vite-plugin-electron-quick-start)
+-   Vue 👉 [electron-vite-vue](https://github.com/electron-vite/electron-vite-vue)
+-   React 👉 [electron-vite-react](https://github.com/electron-vite/electron-vite-react)
+-   Vanilla 👉 [electron-vite-vanilla](https://github.com/electron-vite/vite-plugin-electron-quick-start)

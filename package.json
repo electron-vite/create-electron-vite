@@ -1,63 +1,48 @@
 {
-  "name": "create-electron-vite",
-  "type": "module",
-  "version": "0.1.1",
-  "private": true,
-  "packageManager": "pnpm@7.11.0",
-  "description": "Scaffolding Your Electron + Vite Project",
-  "author": "草鞋没号 <308487730@qq.com>",
-  "license": "MIT",
-  "homepage": "https://github.com/caoxiemeihao/create-electron-vite#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/caoxiemeihao/create-electron-vite.git"
-  },
-  "bugs": {
-    "url": "https://github.com/caoxiemeihao/create-electron-vite/issues"
-  },
-  "keywords": [
-    "electron",
-    "vite",
-    "scaffold",
-    "starter"
-  ],
-  "main": "index.js",
-  "bin": {
-    "create-electron-vite": "index.js",
-    "cev": "index.js"
-  },
-  "files": [
-    "index.js",
-    "dist"
-  ],
-  "engines": {
-    "node": "^14.18.0 || >=16.0.0"
-  },
-  "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "lint": "eslint .",
-    "build": "unbuild"
-  },
-  "dependencies": {
-    "prompts": "^2.4.2"
-  },
-  "devDependencies": {
-    "@antfu/eslint-config": "^0.26.3",
-    "@types/node": "^18.7.18",
-    "@types/prompts": "^2.0.14",
-    "eslint": "^8.23.1",
-    "lint-staged": "^13.0.3",
-    "pnpm": "^7.11.0",
-    "simple-git-hooks": "^2.8.0",
-    "typescript": "^4.8.3",
-    "unbuild": "^0.8.11"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "npx lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx,md}": [
-      "eslint --fix"
-    ]
-  }
+    "name": "create-electron-vite",
+    "version": "0.1.1",
+    "type": "module",
+    "description": "Scaffolding Your Electron + Vite Project",
+    "license": "MIT",
+    "author": "草鞋没号 <308487730@qq.com>",
+    "homepage": "https://github.com/electron-vite/create-electron-vite#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/caoxiemeihao/create-electron-vite.git"
+    },
+    "bugs": {
+        "url": "https://github.com/caoxiemeihao/create-electron-vite/issues"
+    },
+    "main": "index.js",
+    "bin": {
+        "create-electron-vite": "index.js",
+        "cev": "index.js"
+    },
+    "files": [
+        "index.js",
+        "dist"
+    ],
+    "keywords": [
+        "electron",
+        "vite",
+        "scaffold",
+        "starter"
+    ],
+    "scripts": {
+        "build": "unbuild",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "kolorist": "^1.6.0",
+        "prompts": "^2.4.2"
+    },
+    "devDependencies": {
+        "@types/node": "^18.11.18",
+        "@types/prompts": "^2.4.2",
+        "typescript": "^4.9.4",
+        "unbuild": "^1.0.2"
+    },
+    "engines": {
+        "node": "^14.18.0 || >=16.0.0"
+    }
 }
