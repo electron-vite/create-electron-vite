@@ -2,17 +2,16 @@ name: ci
 on:
   push:
     branches:
-      - '**'
-      - '!renovate/**'
+      - "**"
+      - "!renovate/**"
     paths-ignore:
       - README.md
   pull_request:
     branches:
-      - '**'
+      - "**"
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.os == 'windows-latest' }}
     strategy:
       fail-fast: false
       matrix:
@@ -21,22 +20,18 @@ jobs:
           - macos-latest
           - windows-latest
         node-version:
+          - 14
           - 16
-        include:
-          - node-version: 14
-            os: ubuntu-latest
-          - node-version: 18
-            os: ubuntu-latest
+          - 18
     name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v2
         with:
           version: 7
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
-      - run: pnpm install --no-frozen-lockfile
-      - run: pnpm lint
+      - run: pnpm install --frozen-lockfile
       - run: pnpm build
