@@ -7,19 +7,19 @@ Scaffolding Your Electron + Vite Project
 NPM:
 
 ```sh
-$ npm create electron-vite@latest electron-vite-app
+$ npm create electron-vite@latest electron-vite-project
 ```
 
 Yarn:
 
 ```sh
-$ yarn create electron-vite electron-vite-app
+$ yarn create electron-vite electron-vite-project
 ```
 
 PNPM:
 
 ```sh
-$ pnpm create electron-vite electron-vite-app
+$ pnpm create electron-vite electron-vite-project
 ```
 
 ## Template repository
