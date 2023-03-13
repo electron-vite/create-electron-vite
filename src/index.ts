@@ -7,7 +7,7 @@ import prompts from 'prompts'
 const cwd = process.cwd()
 const argTargetDir = process.argv.slice(2).join(' ')
 
-const defaultTargetDir = 'electron-vite-project'
+const defaultTargetDir = 'electron-vite-app'
 
 async function init() {
   let template: prompts.Answers<'projectName' | 'packageName' | 'repoName'>
