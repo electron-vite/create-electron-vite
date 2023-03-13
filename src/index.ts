@@ -143,6 +143,7 @@ function gitClone({
       const fullCloneTargetDir = path.join(cwd, cloneTargetDir)
 
       // extract files from the clone target dir
+      fs.rmSync(path.join(fullCloneTargetDir, '.git'), { recursive: true, force: true })
       fs.copySync(fullCloneTargetDir, fullTargetDir)
       fs.rmSync(fullCloneTargetDir, { recursive: true, force: true })
 
