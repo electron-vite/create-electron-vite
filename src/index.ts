@@ -50,7 +50,7 @@ async function init() {
             },
             {
               title: 'Vanilla',
-              value: 'vite-plugin-electron-quick-start',
+              value: 'electron-vite-boilerplate',
             }
           ]
         }

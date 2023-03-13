@@ -26,4 +26,4 @@ $ pnpm create electron-vite
 
 - Vue 👉 [electron-vite-vue](https://github.com/electron-vite/electron-vite-vue)
 - React 👉 [electron-vite-react](https://github.com/electron-vite/electron-vite-react)
-- Vanilla 👉 [electron-vite-vanilla](https://github.com/electron-vite/vite-plugin-electron-quick-start)
+- Vanilla 👉 [electron-vite-vanilla](https://github.com/electron-vite/electron-vite-boilerplate)
