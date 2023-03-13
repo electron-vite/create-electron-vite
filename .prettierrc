@@ -1,7 +1,8 @@
 {
-    "semi": true,
-    "tabWidth": 4,
-    "trailingComma": "none",
-    "endOfLine": "auto",
-    "printWidth": 120
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "semi": true,
+  "tabWidth": 4,
+  "trailingComma": "none",
+  "endOfLine": "auto",
+  "printWidth": 120
 }
