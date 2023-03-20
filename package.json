@@ -30,7 +30,9 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "lint": "eslint .",
+    "test": "vitest"
   },
   "dependencies": {
     "fs-extra": "^11.1.0",
@@ -41,8 +43,10 @@
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.11.18",
     "@types/prompts": "^2.4.2",
+    "execa": "^7.1.1",
     "typescript": "^4.9.4",
-    "unbuild": "^1.0.2"
+    "unbuild": "^1.0.2",
+    "vitest": "^0.29.3"
   },
   "engines": {
     "node": "^14.18.0 || >=16.0.0"
