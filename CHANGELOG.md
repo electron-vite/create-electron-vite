@@ -1,3 +1,10 @@
+## 0.3.0 (2023-05-27)
+
+42dc950 refactor: use Vite instead unbuild
+246cdfd feat(0.3.0): electron files
+b1a194c feat(0.3.0): fully based on `create-vite` template
+b6e5cb3 feat: template-react-ts, template-vanilla-ts, template-vue-ts
+
 ## 0.2.3 (2023-03-13)
 
 #### Main Changed
