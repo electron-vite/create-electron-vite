@@ -1,6 +1,6 @@
 {
   "name": "create-electron-vite",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "type": "module",
   "description": "Scaffolding Your Electron + Vite Project",
   "license": "MIT",
@@ -19,8 +19,10 @@
     "cev": "index.js"
   },
   "files": [
-    "index.js",
-    "dist"
+    "dist",
+    "electron",
+    "template-*",
+    "index.js"
   ],
   "keywords": [
     "electron",
@@ -29,23 +31,21 @@
     "starter"
   ],
   "scripts": {
-    "build": "unbuild",
+    "watch": "vite build --watch",
+    "build": "vite build",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
     "test": "vitest run"
   },
   "dependencies": {
-    "fs-extra": "^11.1.0",
-    "kolorist": "^1.6.0",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.11.18",
     "@types/prompts": "^2.4.2",
     "execa": "^7.1.1",
     "typescript": "^4.9.4",
-    "unbuild": "^1.0.2",
+    "vite": "^4.3.9",
     "vitest": "^0.29.3"
   },
   "engines": {

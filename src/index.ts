@@ -1,16 +1,35 @@
-import fs from 'fs-extra'
+import fs from 'node:fs'
 import path from 'node:path'
-import { spawn } from 'node:child_process'
-import { red } from 'kolorist'
+import { createRequire } from 'node:module'
+import { fileURLToPath } from 'node:url'
 import prompts from 'prompts'
 
-const cwd = process.cwd()
-const argTargetDir = process.argv.slice(2).join(' ')
+type Framework = 'vue' | 'react' | 'vanilla'
 
+/**
+* @see https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
+* @see https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+*/
+export const COLOURS = {
+  $: (c: number) => (str: string) => `\x1b[${c}m` + str + '\x1b[0m',
+  gary: (str: string) => COLOURS.$(90)(str),
+  cyan: (str: string) => COLOURS.$(36)(str),
+  yellow: (str: string) => COLOURS.$(33)(str),
+  green: (str: string) => COLOURS.$(32)(str),
+  red: (str: string) => COLOURS.$(31)(str),
+}
+
+const cwd = process.cwd()
+const require = createRequire(import.meta.url)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const argTargetDir = process.argv.slice(2).join(' ')
 const defaultTargetDir = 'electron-vite-project'
+const renameFiles: Record<string, string | undefined> = {
+  _gitignore: '.gitignore',
+}
 
 async function init() {
-  let template: prompts.Answers<'projectName' | 'overwrite' | 'packageName' | 'repoName'>
+  let template: prompts.Answers<'projectName' | 'overwrite' | 'packageName' | 'framework'>
 
   let targetDir = argTargetDir ?? defaultTargetDir
 
@@ -41,7 +60,7 @@ async function init() {
         {
           type: (_, { overwrite }: { overwrite?: boolean }) => {
             if (overwrite === false) {
-              throw new Error(red('✖') + ' Operation cancelled')
+              throw new Error(COLOURS.red('✖') + ' Operation cancelled')
             }
             return null
           },
@@ -56,27 +75,27 @@ async function init() {
         },
         {
           type: 'select',
-          name: 'repoName',
+          name: 'framework',
           message: 'Project template:',
           choices: [
             {
               title: 'Vue',
-              value: 'electron-vite-vue',
+              value: 'vue',
             },
             {
               title: 'React',
-              value: 'electron-vite-react',
+              value: 'react',
             },
             {
               title: 'Vanilla',
-              value: 'electron-vite-boilerplate',
+              value: 'vanilla',
             }
           ]
         }
       ],
       {
         onCancel: () => {
-          throw new Error(`${red('✖')} Operation cancelled`)
+          throw new Error(`${COLOURS.red('✖')} Operation cancelled`)
         },
       },
     )
@@ -85,8 +104,8 @@ async function init() {
     return
   }
 
-  // user choice associated with prompts
-  const { overwrite, repoName, packageName } = template
+  // User choice associated with prompts
+  const { overwrite, framework, packageName } = template
 
   const root = path.join(cwd, targetDir)
 
@@ -97,69 +116,53 @@ async function init() {
     fs.mkdirSync(root, { recursive: true })
   }
 
-  const repo = `https://github.com/electron-vite/${repoName}`
+  console.log(`\nScaffolding project in ${root}...`)
 
-  try {
-    await gitClone({ repoName: repo, targetDir, packageName })
-  } catch (err) {
-    if (err instanceof Error) {
-      console.error(err.message)
-      process.exit(1)
+  const templateDir = path.resolve(__dirname, '..', `template-${framework}-ts`)
+  const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent)
+  const pkgManager = pkgInfo ? pkgInfo.name : 'npm'
+
+  const write = (file: string, content?: string) => {
+    const targetPath = path.join(root, renameFiles[file] ?? file)
+    if (content) {
+      fs.writeFileSync(targetPath, content)
+    } else {
+      copy(path.join(templateDir, file), targetPath)
     }
   }
-}
 
-function gitClone({
-  repoName,
-  targetDir,
-  packageName,
-  branch,
-}: {
-  repoName: string
-  targetDir: string
-  packageName?: string
-  branch?: string,
-}) {
-  return new Promise((resolve, reject) => {
-    const cloneTargetDir = `${targetDir}/.temp`
+  const files = fs.readdirSync(templateDir)
+  for (const file of files.filter((f) => f !== 'package.json')) {
+    write(file)
+  }
 
-    spawn(
-      'git',
-      [
-        'clone', ...(branch ? ['-b', branch] : []),
-        repoName,
-        cloneTargetDir,
-        '--depth',
-        '1',
-      ],
-      { stdio: 'inherit' },
-    ).on('close', (code, signal) => {
-      if (code) {
-        reject(code)
-        return
-      }
+  const pkg = JSON.parse(
+    fs.readFileSync(path.join(templateDir, 'package.json'), 'utf-8'),
+  )
 
-      const fullTargetDir = path.join(cwd, targetDir)
-      const fullCloneTargetDir = path.join(cwd, cloneTargetDir)
+  pkg.name = packageName || getProjectName()
 
-      // extract files from the clone target dir
-      fs.rmSync(path.join(fullCloneTargetDir, '.git'), { recursive: true, force: true })
-      fs.copySync(fullCloneTargetDir, fullTargetDir)
-      fs.rmSync(fullCloneTargetDir, { recursive: true, force: true })
+  write('package.json', JSON.stringify(pkg, null, 2) + '\n')
 
-      // modify the name of package.json
-      try {
-        const packageJSON = fs.readFileSync(path.join(fullTargetDir, 'package.json')).toString()
-        const packageInfo = JSON.parse(packageJSON)
-        packageInfo.name = packageName ?? targetDir
-        fs.writeFileSync(path.join(fullTargetDir, 'package.json'), JSON.stringify(packageInfo, null, 2))
-      } catch (e) {
-        console.error(e)
-      }
+  // Mixing in Electron code snippets
+  setupElectron(root, framework)
 
-      resolve(signal)
-    })
-  })
+  console.log(`\nDone. Now run:\n`)
+  const cdProjectName = path.relative(cwd, root)
+  if (root !== cwd) {
+    console.log(`  cd ${cdProjectName.includes(' ') ? `"${cdProjectName}"` : cdProjectName}`)
+  }
+  switch (pkgManager) {
+    case 'yarn':
+      console.log('  yarn')
+      console.log('  yarn dev')
+      break
+    default:
+      console.log(`  ${pkgManager} install`)
+      console.log(`  ${pkgManager} run dev`)
+      break
+  }
+  console.log()
 }
 
 function isEmpty(path: string) {
@@ -190,6 +193,172 @@ function toValidPackageName(projectName: string) {
     .replace(/\s+/g, '-')
     .replace(/^[._]/, '')
     .replace(/[^a-z\d\-~]+/g, '-')
+}
+
+function copy(src: string, dest: string) {
+  const stat = fs.statSync(src)
+  if (stat.isDirectory()) {
+    copyDir(src, dest)
+  } else {
+    fs.copyFileSync(src, dest)
+  }
+}
+
+function copyDir(srcDir: string, destDir: string) {
+  fs.mkdirSync(destDir, { recursive: true })
+  for (const file of fs.readdirSync(srcDir)) {
+    const srcFile = path.resolve(srcDir, file)
+    const destFile = path.resolve(destDir, file)
+    copy(srcFile, destFile)
+  }
+}
+
+function editFile(file: string, callback: (content: string) => string) {
+  const content = fs.readFileSync(file, 'utf-8')
+  fs.writeFileSync(file, callback(content), 'utf-8')
+}
+
+function pkgFromUserAgent(userAgent: string | undefined) {
+  if (!userAgent) return undefined
+  const pkgSpec = userAgent.split(' ')[0]
+  const pkgSpecArr = pkgSpec.split('/')
+  return {
+    name: pkgSpecArr[0],
+    version: pkgSpecArr[1],
+  }
+}
+
+function setupElectron(root: string, framework: Framework) {
+  const sourceDir = path.resolve(__dirname, '..', 'electron')
+  const electronDir = path.join(root, 'electron')
+  const publicDir = path.join(root, 'public')
+  const pkg = require('../electron/package.json')
+
+  fs.mkdirSync(electronDir, { recursive: true })
+
+  // Electron files
+  for (const name of [
+    'electron-env.d.ts',
+    'main.ts',
+    'preload.ts',
+  ]) {
+    fs.copyFileSync(path.join(sourceDir, name), path.join(electronDir, name))
+  }
+
+  for (const name of [
+    'electron-vite.animate.svg',
+    'electron-vite.svg',
+  ]) {
+    fs.copyFileSync(path.join(sourceDir, name), path.join(publicDir, name))
+  }
+
+  for (const name of [
+    'electron-builder.json5',
+  ]) {
+    fs.copyFileSync(path.join(sourceDir, name), path.join(root, name))
+  }
+
+  // package.json
+  editFile(path.join(root, 'package.json'), content => {
+    const json = JSON.parse(content)
+    json.main = 'dist-electron/main.js'
+    json.type = undefined // Electron(24-) only support CommonJs now
+    json.scripts.build = `${json.scripts.build} && electron-builder`
+    json.devDependencies.electron = pkg.devDependencies.electron
+    json.devDependencies['electron-builder'] = pkg.devDependencies['electron-builder']
+    json.devDependencies['vite-plugin-electron'] = pkg.devDependencies['vite-plugin-electron']
+    json.devDependencies['vite-plugin-electron-renderer'] = pkg.devDependencies['vite-plugin-electron-renderer']
+    return JSON.stringify(json, null, 2) + '\n'
+  })
+
+  // main.ts
+  const snippets = `postMessage({ payload: 'removeLoading' }, '*')`
+  if (framework === 'vue') {
+    editFile(path.join(root, 'src/main.ts'), content =>
+      content.replace(`mount('#app')`, `mount('#app').$nextTick(() => ${snippets})`)
+    )
+  } else if (framework === 'react') {
+    editFile(path.join(root, 'src/main.tsx'), content => `${content}\n${snippets}\n`)
+  } else if (framework === 'vanilla') {
+    editFile(path.join(root, 'src/main.ts'), content => `${content}\n${snippets}\n`)
+  }
+
+  // vite.config.ts
+  const electronPlugin = `electron([
+      {
+        // Main-Process entry file of the Electron App.
+        entry: 'electron/main.ts',
+      },
+      {
+        entry: 'electron/preload.ts',
+        onstart(options) {
+          // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete, 
+          // instead of restarting the entire Electron App.
+          options.reload()
+        },
+      },
+    ])`
+  if (framework === 'vue' || framework === 'react') {
+    editFile(path.join(root, 'vite.config.ts'), content =>
+      content
+        .split('\n')
+        .map(line => line.includes("import { defineConfig } from 'vite'")
+          ? `${line}
+import electron from 'vite-plugin-electron'
+import renderer from 'vite-plugin-electron-renderer'`
+          : line)
+        .map(line => line.trimStart().startsWith('plugins')
+          ? `  plugins: [
+    ${framework}(),
+    ${electronPlugin},
+    renderer(),
+  ],`
+          : line)
+        .join('\n')
+    )
+  } else {
+    fs.writeFileSync(
+      path.join(root, 'vite.config.ts'),
+      `
+import { defineConfig } from 'vite'
+import electron from 'vite-plugin-electron'
+import renderer from 'vite-plugin-electron-renderer'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    ${electronPlugin},
+    renderer(),
+  ],
+})
+`.trimStart()
+    )
+  }
+
+  // tsconfig.json
+  editFile(path.join(root, 'tsconfig.json'), content =>
+    content
+      .split('\n')
+      .map(line => line.trimStart().startsWith('"include"') ? line.replace(']', ', "electron"]') : line)
+      .join('\n')
+  )
+
+  // .gitignore
+  editFile(path.join(root, '.gitignore'), content =>
+    content
+      .split('\n')
+      .map(line => line === 'dist-ssr' ? `${line}\ndist-electron\nrelease` : line)
+      .join('\n')
+  )
+
+  // electron-vite.svg
+  if (framework === 'vue') {
+    editFile(path.join(root, 'src/App.vue'), content => content.replace('/vite.svg', '/electron-vite.svg'))
+  } else if (framework === 'react') {
+    editFile(path.join(root, 'src/App.tsx'), content => content.replace('/vite.svg', '/electron-vite.animate.svg'))
+  } else if (framework === 'vanilla') {
+    editFile(path.join(root, 'src/main.ts'), content => content.replace('/vite.svg', '/electron-vite.svg'))
+  }
 }
 
 init().catch((e) => {
