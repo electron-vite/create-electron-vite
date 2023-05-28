@@ -8,10 +8,10 @@
   "homepage": "https://github.com/electron-vite/create-electron-vite#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/caoxiemeihao/create-electron-vite.git"
+    "url": "git+https://github.com/electron-vite/create-electron-vite.git"
   },
   "bugs": {
-    "url": "https://github.com/caoxiemeihao/create-electron-vite/issues"
+    "url": "https://github.com/electron-vite/create-electron-vite/issues"
   },
   "main": "index.js",
   "bin": {
