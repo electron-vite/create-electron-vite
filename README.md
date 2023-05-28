@@ -1,8 +1,8 @@
 # create-electron-vite
 
-Scaffolding Your Electron + Vite Project
+Scaffolding Your [Electron⚡️Vite](https://github.com/electron-vite) Project
 
-![electron-vite-vue.gif](https://github.com/electron-vite/electron-vite-vue/raw/main/public/electron-vite-vue.gif?raw=true)
+![electron-vite-vue.gif](https://github.com/electron-vite/create-electron-vite/blob/main/electron-vite-vue.gif?raw=true)
 
 NPM:
 
@@ -21,9 +21,3 @@ PNPM:
 ```sh
 $ pnpm create electron-vite electron-vite-project
 ```
-
-## Template repository
-
-- Vue 👉 [electron-vite-vue](https://github.com/electron-vite/electron-vite-vue)
-- React 👉 [electron-vite-react](https://github.com/electron-vite/electron-vite-react)
-- Vanilla 👉 [electron-vite-vanilla](https://github.com/electron-vite/electron-vite-boilerplate)
