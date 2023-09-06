@@ -360,13 +360,20 @@ export default defineConfig({
       .join('\n')
   )
 
-  // electron-vite.svg
+  // site 👉 https://electron-vite.github.io
+  // logo 👉 electron-vite.svg
   if (framework === 'vue') {
-    editFile(path.join(root, 'src/App.vue'), content => content.replace('/vite.svg', '/electron-vite.svg'))
+    editFile(path.join(root, 'src/App.vue'), content => content
+      .replace('https://vitejs.dev', 'https://electron-vite.github.io')
+      .replace('/vite.svg', '/electron-vite.svg'))
   } else if (framework === 'react') {
-    editFile(path.join(root, 'src/App.tsx'), content => content.replace('/vite.svg', '/electron-vite.animate.svg'))
+    editFile(path.join(root, 'src/App.tsx'), content => content
+      .replace('https://vitejs.dev', 'https://electron-vite.github.io')
+      .replace('/vite.svg', '/electron-vite.animate.svg'))
   } else if (framework === 'vanilla') {
-    editFile(path.join(root, 'src/main.ts'), content => content.replace('/vite.svg', '/electron-vite.svg'))
+    editFile(path.join(root, 'src/main.ts'), content => content
+      .replace('https://vitejs.dev', 'https://electron-vite.github.io')
+      .replace('/vite.svg', '/electron-vite.svg'))
   }
 }
 
