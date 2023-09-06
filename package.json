@@ -1,6 +1,6 @@
 {
   "name": "create-electron-vite",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "description": "Scaffolding Your Electron + Vite Project",
   "license": "MIT",
@@ -33,7 +33,7 @@
   "scripts": {
     "watch": "vite build --watch",
     "build": "vite build",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run build && npm run test",
     "lint": "eslint .",
     "test": "vitest run"
   },
