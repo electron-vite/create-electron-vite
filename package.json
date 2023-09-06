@@ -31,6 +31,7 @@
     "starter"
   ],
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "watch": "vite build --watch",
     "build": "vite build",
     "prepublishOnly": "npm run build && npm run test",
@@ -50,5 +51,6 @@
   },
   "engines": {
     "node": "^14.18.0 || >=16.0.0"
-  }
+  },
+  "packageManager": "pnpm@8.0.0"
 }

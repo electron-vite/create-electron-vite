@@ -33,8 +33,25 @@ test('prompts for the project name if none supplied', () => {
   expect(stdout).toContain('Project name:')
 })
 
-test('prompts for project template if none supplied when target dir is current directory', () => {
+test('prompts for the framework if none supplied when target dir is current directory', () => {
   fs.mkdirSync(generatePath, { recursive: true })
   const { stdout } = run(['.'], { cwd: generatePath })
   expect(stdout).toContain('Project template:')
+})
+
+test('prompts for the framework if none supplied', () => {
+  const { stdout } = run([projectName])
+  expect(stdout).toContain('Project template:')
+})
+
+test('asks to overwrite non-empty target directory', () => {
+  createNonEmptyDir()
+  const { stdout } = run([projectName], { cwd: __dirname })
+  expect(stdout).toContain(`Target directory "${projectName}" is not empty.`)
+})
+
+test('asks to overwrite non-empty current directory', () => {
+  createNonEmptyDir()
+  const { stdout } = run(['.'], { cwd: generatePath })
+  expect(stdout).toContain(`Current directory is not empty.`)
 })
