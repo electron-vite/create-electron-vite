@@ -272,46 +272,56 @@ function setupElectron(root: string, framework: Framework) {
   })
 
   // main.ts
-  const snippets = `postMessage({ payload: 'removeLoading' }, '*')`
+  const snippets = (indent = 0) => `
+// Remove Preload scripts loading
+postMessage({ payload: 'removeLoading' }, '*')
+
+// Use contextBridge
+window.ipcRenderer.on('main-process-message', (_event, message) => {
+  console.log(message)
+})
+`.trim()
+    .split('\n')
+    .map(line => line ? ' '.repeat(indent) + line : line)
+    .join('\n')
   if (framework === 'vue') {
     editFile(path.join(root, 'src/main.ts'), content =>
-      content.replace(`mount('#app')`, `mount('#app').$nextTick(() => ${snippets})`)
+      content.replace(`mount('#app')`, `mount('#app').$nextTick(() => {\n${snippets(2)}\n})`)
     )
   } else if (framework === 'react') {
-    editFile(path.join(root, 'src/main.tsx'), content => `${content}\n${snippets}\n`)
+    editFile(path.join(root, 'src/main.tsx'), content => `${content}\n${snippets()}\n`)
   } else if (framework === 'vanilla') {
-    editFile(path.join(root, 'src/main.ts'), content => `${content}\n${snippets}\n`)
+    editFile(path.join(root, 'src/main.ts'), content => `${content}\n${snippets()}\n`)
   }
 
   // vite.config.ts
-  const electronPlugin = `electron([
-      {
-        // Main-Process entry file of the Electron App.
+  const electronPlugin = `electron({
+      main: {
+        // Shortcut of \`build.lib.entry\`.
         entry: 'electron/main.ts',
       },
-      {
-        entry: 'electron/preload.ts',
-        onstart(options) {
-          // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete, 
-          // instead of restarting the entire Electron App.
-          options.reload()
-        },
+      preload: {
+        // Shortcut of \`build.rollupOptions.input\`.
+        // Preload scripts may contain Web assets, so use the \`build.rollupOptions.input\` instead \`build.lib.entry\`.
+        input: path.join(__dirname, 'electron/preload.ts'),
       },
-    ])`
+      // Ployfill the Electron and Node.js built-in modules for Renderer process.
+      // See 👉 https://github.com/electron-vite/vite-plugin-electron-renderer
+      renderer: {},
+    })`
   if (framework === 'vue' || framework === 'react') {
     editFile(path.join(root, 'vite.config.ts'), content =>
       content
         .split('\n')
         .map(line => line.includes("import { defineConfig } from 'vite'")
           ? `${line}
-import electron from 'vite-plugin-electron'
-import renderer from 'vite-plugin-electron-renderer'`
+import path from 'node:path'
+import electron from 'vite-plugin-electron/simple'`
           : line)
         .map(line => line.trimStart().startsWith('plugins')
           ? `  plugins: [
     ${framework}(),
     ${electronPlugin},
-    renderer(),
   ],`
           : line)
         .join('\n')
@@ -321,14 +331,13 @@ import renderer from 'vite-plugin-electron-renderer'`
       path.join(root, 'vite.config.ts'),
       `
 import { defineConfig } from 'vite'
-import electron from 'vite-plugin-electron'
-import renderer from 'vite-plugin-electron-renderer'
+import path from 'node:path'
+import electron from 'vite-plugin-electron/simple'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     ${electronPlugin},
-    renderer(),
   ],
 })
 `.trimStart()
@@ -351,13 +360,20 @@ export default defineConfig({
       .join('\n')
   )
 
-  // electron-vite.svg
+  // site 👉 https://electron-vite.github.io
+  // logo 👉 electron-vite.svg
   if (framework === 'vue') {
-    editFile(path.join(root, 'src/App.vue'), content => content.replace('/vite.svg', '/electron-vite.svg'))
+    editFile(path.join(root, 'src/App.vue'), content => content
+      .replace('https://vitejs.dev', 'https://electron-vite.github.io')
+      .replace('/vite.svg', '/electron-vite.svg'))
   } else if (framework === 'react') {
-    editFile(path.join(root, 'src/App.tsx'), content => content.replace('/vite.svg', '/electron-vite.animate.svg'))
+    editFile(path.join(root, 'src/App.tsx'), content => content
+      .replace('https://vitejs.dev', 'https://electron-vite.github.io')
+      .replace('/vite.svg', '/electron-vite.animate.svg'))
   } else if (framework === 'vanilla') {
-    editFile(path.join(root, 'src/main.ts'), content => content.replace('/vite.svg', '/electron-vite.svg'))
+    editFile(path.join(root, 'src/main.ts'), content => content
+      .replace('https://vitejs.dev', 'https://electron-vite.github.io')
+      .replace('/vite.svg', '/electron-vite.svg'))
   }
 }
 

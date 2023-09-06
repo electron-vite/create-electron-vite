@@ -1,13 +1,13 @@
-import { join } from 'node:path'
+import fs from 'node:fs'
+import path from 'node:path'
 import type { ExecaSyncReturnValue, SyncOptions } from 'execa'
 import { execaCommandSync } from 'execa'
-import fs from 'fs-extra'
 import { afterEach, beforeAll, expect, test } from 'vitest'
 
-const CLI_PATH = join(__dirname, '..')
+const CLI_PATH = path.join(__dirname, '..')
 
 const projectName = 'electron-vite-app'
-const genPath = join(__dirname, projectName)
+const generatePath = path.join(__dirname, projectName)
 
 const run = (
   args: string[],
@@ -18,15 +18,15 @@ const run = (
 
 const createNonEmptyDir = () => {
   // Create the temporary directory
-  fs.mkdirpSync(genPath)
+  fs.mkdirSync(generatePath, { recursive: true })
 
   // Create a package.json file
-  const pkgJson = join(genPath, 'package.json')
+  const pkgJson = path.join(generatePath, 'package.json')
   fs.writeFileSync(pkgJson, '{ "foo": "bar" }')
 }
 
-beforeAll(() => fs.remove(genPath))
-afterEach(() => fs.remove(genPath))
+beforeAll(() => fs.rmSync(generatePath, { recursive: true, force: true }))
+afterEach(() => fs.rmSync(generatePath, { recursive: true, force: true }))
 
 test('prompts for the project name if none supplied', () => {
   const { stdout } = run([])
@@ -34,8 +34,8 @@ test('prompts for the project name if none supplied', () => {
 })
 
 test('prompts for the framework if none supplied when target dir is current directory', () => {
-  fs.mkdirpSync(genPath)
-  const { stdout } = run(['.'], { cwd: genPath })
+  fs.mkdirSync(generatePath, { recursive: true })
+  const { stdout } = run(['.'], { cwd: generatePath })
   expect(stdout).toContain('Project template:')
 })
 
@@ -52,6 +52,6 @@ test('asks to overwrite non-empty target directory', () => {
 
 test('asks to overwrite non-empty current directory', () => {
   createNonEmptyDir()
-  const { stdout } = run(['.'], { cwd: genPath })
+  const { stdout } = run(['.'], { cwd: generatePath })
   expect(stdout).toContain(`Current directory is not empty.`)
 })

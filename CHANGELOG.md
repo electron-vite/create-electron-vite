@@ -1,3 +1,43 @@
+## 0.4.0 (2023-09-06)
+
+- 38af79d chore: test v0.4.0
+- f5dafdf chore: update template
+- 7114cac chore: site use `https://electron-vite.github.io`
+- 394686c refactor: use `vite-plugin-electron` simple API
+
+#### Main Changed
+
+**0.4.0** use the simple API of `vite-plugin-electron`
+
+```ts
+import electron from 'vite-plugin-electron/simple'
+
+electron({
+  main: {
+    entry: 'electron/main.ts',
+  },
+  preload: {
+    input: __dirname + '/electron/preload.ts',
+  },
+  renderer: {},
+})
+```
+
+**0.3.0**
+
+```ts
+import electron from 'vite-plugin-electron'
+
+electron([
+  {
+    entry: 'electron/main.ts',
+  },
+  {
+    entry: 'electron/preload.ts',
+  },
+])
+```
+
 ## 0.3.0 (2023-05-27)
 
 42dc950 refactor: use Vite instead unbuild
