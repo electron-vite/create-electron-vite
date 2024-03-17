@@ -1,3 +1,11 @@
+## 0.5.0 (2024-03-17)
+
+- 626ed65 v0.5.0
+- 742b923 chore: sync templates form create-vite
+- c8d33a9 chore: bupms electron, electron-builder, vite-plugin-electron
+- 232c526 feat: preload.ts adapt electron@29
+- a9e13ae feat: add create-electron-vite.gif
+
 ## 0.4.0 (2023-09-06)
 
 - 38af79d chore: test v0.4.0

@@ -1,8 +1,8 @@
 {
   "devDependencies": {
-    "electron": "^26.1.0",
-    "electron-builder": "^24.6.4",
-    "vite-plugin-electron": "^0.14.0",
+    "electron": "^29.1.4",
+    "electron-builder": "^24.13.3",
+    "vite-plugin-electron": "^0.28.4",
     "vite-plugin-electron-renderer": "^0.14.5"
   }
 }
