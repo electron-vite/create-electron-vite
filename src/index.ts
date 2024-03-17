@@ -273,9 +273,6 @@ function setupElectron(root: string, framework: Framework) {
 
   // main.ts
   const snippets = (indent = 0) => `
-// Remove Preload scripts loading
-postMessage({ payload: 'removeLoading' }, '*')
-
 // Use contextBridge
 window.ipcRenderer.on('main-process-message', (_event, message) => {
   console.log(message)
@@ -305,7 +302,8 @@ window.ipcRenderer.on('main-process-message', (_event, message) => {
         // Preload scripts may contain Web assets, so use the \`build.rollupOptions.input\` instead \`build.lib.entry\`.
         input: path.join(__dirname, 'electron/preload.ts'),
       },
-      // Ployfill the Electron and Node.js built-in modules for Renderer process.
+      // Ployfill the Electron and Node.js API for Renderer process.
+      // If you want use Node.js in Renderer process, the \`nodeIntegration\` needs to be enabled in the Main process.
       // See 👉 https://github.com/electron-vite/vite-plugin-electron-renderer
       renderer: {},
     })`
