@@ -21,7 +21,7 @@
   "files": [
     "dist",
     "electron",
-    "template-*",
+    "template-*/**",
     "index.js"
   ],
   "keywords": [
