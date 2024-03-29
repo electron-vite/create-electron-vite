@@ -1,3 +1,10 @@
+## 0.5.2 (2024-03-29)
+
+- 73fecf2 Merge pull request #33 from badspider7/patch-1
+- 2797dc2 fix: resolve ipcRenderer no returns
+- fcfc74d (tag: v0.5.0) v0.5.1
+- 77d76f4 fix: includes template-*/** to files
+
 ## 0.5.0 (2024-03-17)
 
 - 626ed65 v0.5.0
