@@ -15,7 +15,7 @@ declare namespace NodeJS {
      * │
      * ```
      */
-    DIST: string
+    APP_ROOT: string
     /** /dist/ or /public/ */
     VITE_PUBLIC: string
   }
