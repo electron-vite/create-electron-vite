@@ -1,3 +1,10 @@
+## 0.6.0 (2024-04-18)
+
+- 28f7b4a fix: compatible vitest #26
+- b0f59fb (github/v0.6.0) chore: update electron-builder.json5
+- 59d3d33 refactor: better `process.env` assign
+- e636b5d chore: correct `process.env.VITE_PUBLIC`
+
 ## 0.5.2 (2024-03-29)
 
 - 73fecf2 Merge pull request #33 from badspider7/patch-1
