@@ -1,5 +1,9 @@
 import { app, BrowserWindow } from 'electron'
+import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+
+globalThis.__filename = fileURLToPath(import.meta.url)
+globalThis.__dirname = path.dirname(__filename)
 
 // The built directory structure
 //
@@ -8,7 +12,7 @@ import path from 'node:path'
 // │ │
 // │ ├─┬ dist-electron
 // │ │ ├── main.js
-// │ │ └── preload.js
+// │ │ └── preload.mjs
 // │
 process.env.APP_ROOT = path.join(__dirname, '..')
 
@@ -25,7 +29,7 @@ function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.mjs'),
     },
   })
 

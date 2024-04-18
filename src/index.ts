@@ -262,7 +262,6 @@ function setupElectron(root: string, framework: Framework) {
   editFile(path.join(root, 'package.json'), content => {
     const json = JSON.parse(content)
     json.main = 'dist-electron/main.js'
-    json.type = undefined // Electron(24-) only support CommonJs now
     json.scripts.build = `${json.scripts.build} && electron-builder`
     json.devDependencies.electron = pkg.devDependencies.electron
     json.devDependencies['electron-builder'] = pkg.devDependencies['electron-builder']
