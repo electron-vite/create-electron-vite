@@ -1,9 +1,10 @@
 import { app, BrowserWindow } from 'electron'
+import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
-globalThis.__filename = fileURLToPath(import.meta.url)
-globalThis.__dirname = path.dirname(__filename)
+const require = createRequire(import.meta.url)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // The built directory structure
 //
