@@ -1,3 +1,10 @@
+## 0.7.0 (2024-04-21)
+
+- 0dcdf39 chore: remove `globalThis.__dirname`
+- f48de08 feat: add `.npmrc` to template
+- 9c84030 feat: support esmodule
+- e2c3822 chore: bump deps
+
 ## 0.6.0 (2024-04-18)
 
 - 28f7b4a fix: compatible vitest #26
