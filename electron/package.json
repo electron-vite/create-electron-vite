@@ -3,6 +3,7 @@
     "electron": "^30.0.1",
     "electron-builder": "^24.13.3",
     "vite-plugin-electron": "^0.28.6",
-    "vite-plugin-electron-renderer": "^0.14.5"
+    "vite-plugin-electron-renderer": "^0.14.5",
+    "vite-plugin-static-copy": "^1.0.5"
   }
 }

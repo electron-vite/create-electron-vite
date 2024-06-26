@@ -260,13 +260,21 @@ function setupElectron(root: string, framework: Framework) {
 
   // package.json
   editFile(path.join(root, 'package.json'), content => {
+    const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent)
+    const pkgManager = pkgInfo ? pkgInfo.name : 'npm'
     const json = JSON.parse(content)
     json.main = 'dist-electron/main.js'
-    json.scripts.build = `${json.scripts.build} && electron-builder`
+    json.scripts.build = `${json.scripts.build} && cd dist && ${pkgManager} i && electron-builder`
     json.devDependencies.electron = pkg.devDependencies.electron
     json.devDependencies['electron-builder'] = pkg.devDependencies['electron-builder']
     json.devDependencies['vite-plugin-electron'] = pkg.devDependencies['vite-plugin-electron']
     json.devDependencies['vite-plugin-electron-renderer'] = pkg.devDependencies['vite-plugin-electron-renderer']
+    json.devDependencies['vite-plugin-static-copy'] = pkg.devDependencies['vite-plugin-static-copy']
+    json.build = {
+      directories: {
+        output: 'dist-app',
+      },
+    }
     return JSON.stringify(json, null, 2) + '\n'
   })
 
@@ -309,6 +317,34 @@ window.ipcRenderer.on('main-process-message', (_event, message) => {
         ? undefined
         : {},
     })`
+  const copyPlugin = `copy({
+      targets: [
+        {
+          src: 'package.json',
+          dest: '',
+          transform(contents) {
+            const json = JSON.parse(contents.toString());
+            json.main = 'main.js';
+            delete json.scripts;
+            const ev = json.devDependencies.electron;
+            delete json.dependencies;
+            json.devDependencies = {
+              electron: ev,
+            };
+            json.build.directories.output = path.join('..', json.build.directories.output ?? 'dist-app');
+            return JSON.stringify(json, null, 2);
+          },
+        },
+        {
+          src: 'dist-electron/main.js',
+          dest: '',
+        },
+        {
+          src: 'dist-electron/preload.mjs',
+          dest: '',
+        },
+      ],
+    })`
   if (framework === 'vue' || framework === 'react') {
     editFile(path.join(root, 'vite.config.ts'), content =>
       content
@@ -316,12 +352,14 @@ window.ipcRenderer.on('main-process-message', (_event, message) => {
         .map(line => line.includes("import { defineConfig } from 'vite'")
           ? `${line}
 import path from 'node:path'
-import electron from 'vite-plugin-electron/simple'`
+import electron from 'vite-plugin-electron/simple'
+import { viteStaticCopy as copy } from 'vite-plugin-static-copy'`
           : line)
         .map(line => line.trimStart().startsWith('plugins')
           ? `  plugins: [
     ${framework}(),
     ${electronPlugin},
+    ${copyPlugin},
   ],`
           : line)
         .join('\n')
@@ -333,11 +371,13 @@ import electron from 'vite-plugin-electron/simple'`
 import { defineConfig } from 'vite'
 import path from 'node:path'
 import electron from 'vite-plugin-electron/simple'
+import { viteStaticCopy as copy } from 'vite-plugin-static-copy'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     ${electronPlugin},
+    ${copyPlugin},
   ],
 })
 `.trimStart()
