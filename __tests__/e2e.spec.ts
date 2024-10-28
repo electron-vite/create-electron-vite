@@ -60,6 +60,9 @@ if (process.platform === 'linux') {
 
   describe('[create-electron-vite] e2e tests', async () => {
     test('startup', async () => {
+      console.log('[e2e] npm-install.log:\n', readFileSync('npm-install.log'))
+      console.log('[e2e] vite-build.log:\n', readFileSync('vite-build.log'))
+
       const title = await page.title()
       expect(title).eq('Vite + Vue + TS')
     })
@@ -98,15 +101,14 @@ async function createProject() {
 
 // For local testing
 function enableElectronMirror() {
-  const npmrc = path.join(generatePath, '.npmrc')
-  let npmrcContent = fs.readFileSync(npmrc, 'utf8')
+  let npmrcContent = readFileSync('.npmrc')
 
   npmrcContent = npmrcContent
     .split('\n')
-    .map((line) => line.includes('electron_mirror') ? line.replace('#', '').trim() : line)
+    .map((line) => line.includes('electron_mirror') ? line.replace('#', '').trimStart() : line)
     .join('\n')
 
-  fs.writeFileSync(npmrc, npmrcContent)
+  writeFileSync('.npmrc', npmrcContent)
 }
 
 function execSync(command: string) {
@@ -115,6 +117,10 @@ function execSync(command: string) {
 
 function writeFileSync(file: string, content: string) {
   return fs.writeFileSync(path.join(generatePath, file), content)
+}
+
+function readFileSync(file: string) {
+  return fs.readFileSync(path.join(generatePath, file), 'utf8')
 }
 
 function intervalTask<R>(fn: (args: { stop: () => void }) => R | Promise<R>, options?: {
