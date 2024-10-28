@@ -19,6 +19,7 @@ import {
 const CLI_PATH = path.join(__dirname, '..')
 const projectName = 'electron-vite-test'
 const generatePath = path.join(CLI_PATH, projectName)
+const pkgManager = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 let electronApp: ElectronApplication
 let page: Page
 
@@ -29,7 +30,7 @@ beforeAll(async () => {
 
   // enableElectronMirror()
 
-  const installLogs = execSync('npm install')
+  const installLogs = execSync(`${pkgManager} install`)
   writeFileSync('npm-install.log', installLogs)
 
   const buildLogs = execSync('vite build')
