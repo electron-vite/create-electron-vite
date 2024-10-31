@@ -106,3 +106,5 @@ dist
 .DS_Store
 # build
 index.cjs
+# e2e test
+electron-vite-test
